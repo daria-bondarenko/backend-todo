@@ -20,7 +20,7 @@ module.exports.changeTaskInfo = (req, res) => {
 
   if (req.body.hasOwnProperty('_id') && (req.body.hasOwnProperty('text') || req.body.hasOwnProperty('isCheck'))) {
     for (let key in req.body) {
-      if (key != "_id" && req.body[key] != null || undefined) {
+      if (key === 'isCheck' || 'text' && req.body[key] != null || undefined) {
         Task.updateOne({ _id }, {[key]: req.body[key]}
         ).then(result => {
           Task.find().then(result => {
