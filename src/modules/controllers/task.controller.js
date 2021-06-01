@@ -16,38 +16,25 @@ module.exports.createNewTask = (req, res) => {
 };
 
 module.exports.changeTaskInfo = (req, res) => {
+  const {_id, text, isCheck} = req.body;
 
   if (req.body.hasOwnProperty('_id') && (req.body.hasOwnProperty('text') || req.body.hasOwnProperty('isCheck'))) {
-    Task.find().then(result => {
-        if (req.body.text) {
-          Task.updateOne({_id: req.body._id}, {text: req.body.text}
-          ).then(result => {
-            Task.find().then(result => {
-              res.send({data: result})
-            })
+    for (let key in req.body) {
+      if (key != "_id" && req.body[key] != null || undefined) {
+        Task.updateOne({ _id }, {[key]: req.body[key]}
+        ).then(result => {
+          Task.find().then(result => {
+            res.send({data: result})
           })
-        }
+        })
       }
-    ).then(result => {
-      Task.find().then(result => {
-        if (req.body.isCheck) {
-          Task.updateOne({_id: req.body._id}, {isCheck: req.body.isCheck}).then(result => {
-            Task.find().then(result => {
-              res.send({data: result})
-            })
-          })
-        }
-      })
-
-    })
+    }
   } else {
     Task.find().then(result => {
       res.send({data: result})
     })
   }
 }
-
-
 
 module.exports.deleteTask = (req, res) => {
   Task.deleteOne({_id: req.body._id}).then(result => {
